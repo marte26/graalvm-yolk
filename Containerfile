@@ -1,4 +1,4 @@
-FROM --platform=$TARGETOS/$TARGETARCH container-registry.oracle.com/graalvm/jdk-ee:22.3.2
+FROM --platform=$TARGETOS/$TARGETARCH container-registry.oracle.com/graalvm/jdk-ee:22.3.3
 
 RUN microdnf -y upgrade && \
     microdnf -y install lsof curl ca-certificates openssl git tar sqlite fontconfig freetype tzdata iproute libstdc++ && \
