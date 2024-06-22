@@ -42,20 +42,11 @@ jobs:
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
 
-      # Extract metadata (tags, labels) for Docker
-      # https://github.com/docker/metadata-action
-      - name: Extract Docker metadata
+      - name: Extract Docker versions from file
         id: meta
-        uses: docker/metadata-action@v5
-        with:
-          images: |
-            ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
-          tags: |
-            type=ref,event=branch
-            type=ref,event=pr
-            type=semver,pattern={{major}}
-            type=semver,pattern={{major}}.{{minor}}
-            type=semver,pattern={{major}}.{{minor}}.{{patch}}
+        run: >
+          grep '^FROM' Containerfile.${{matrix.jdk-version}} | cut -d':' -f2 |
+          awk -F'.' '{print "tags=${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:"$1",${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:"$1"."$2",${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:"$0}' >> "$GITHUB_OUTPUT"
 
       # Build and push Docker image with Buildx (don't push on PR)
       # https://github.com/docker/build-push-action
@@ -64,7 +55,7 @@ jobs:
         uses: docker/build-push-action@v6
         with:
           context: .
-          file: Containerfile
+          file: Containerfile.${{matrix.jdk-version}}
           platforms: linux/amd64,linux/arm64
           push: ${{ github.event_name != 'pull_request' }}
           tags: ${{ steps.meta.outputs.tags }}
