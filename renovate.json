@@ -3,5 +3,11 @@
   "extends": [
     "config:base",
     ":dependencyDashboard"
+  ],
+  "packageRules": [
+    {
+      "matchUpdateTypes": ["major"],
+      "enabled": false
+    }
   ]
 }
