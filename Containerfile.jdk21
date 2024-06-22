@@ -1,4 +1,4 @@
-FROM container-registry.oracle.com/graalvm/jdk:21.0.3
+FROM --platform=$TARGETOS/$TARGETARCH container-registry.oracle.com/graalvm/jdk:21.0.3
 
 RUN microdnf -y upgrade && \
     microdnf -y install lsof curl ca-certificates openssl git tar sqlite fontconfig freetype tzdata iproute libstdc++ && \
