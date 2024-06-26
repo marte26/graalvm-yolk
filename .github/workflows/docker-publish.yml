@@ -17,7 +17,6 @@ jobs:
     strategy:
       matrix:
         jdk-version: [jdk17, jdk21]
-        architecture: [linux/amd64, linux/arm64]
     runs-on: ubuntu-latest
     permissions:
       contents: read
@@ -58,7 +57,7 @@ jobs:
           context: .
           provenance: false
           file: Containerfile.${{matrix.jdk-version}}
-          platforms: ${{matrix.architecture}}
+          platforms: linux/amd64, linux/arm64
           push: ${{ github.event_name != 'pull_request' }}
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
